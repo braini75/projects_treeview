@@ -1,0 +1,95 @@
+/* 
+Copyright (c) 2014 Ryan Seddon
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in 
+the Software without restriction, including without limitation the rights to 
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
+of the Software, and to permit persons to whom the Software is furnished to do 
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all 
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+SOFTWARE.
+
+
+The original css tree menu is based on a work of Ryan Seddon, presented in his 
+blog (see http://www.thecssninja.com/css/css-tree-menu) 
+*/
+
+/* CSS Tree menu styles */
+ol.tree
+{
+	padding: 0 0 0 30px;
+	width: 300px;
+	font-size: 16px;
+}
+	li 
+	{ 
+		position: relative; 
+		margin-left: -15px;
+		list-style: none;
+	}
+	li.file
+	{
+		margin-left: -1px !important;
+	}
+		li.file a
+		{
+			background: url(../images/document.png) 0 0 no-repeat;
+			padding-left: 21px;
+			text-decoration: none;
+			display: block;
+			
+		}
+		li.file a[href *= '.pdf']	{ background: url(../images/document.png) 0 0 no-repeat; }
+		li.file a[href *= '.html']	{ background: url(../images/document.png) 0 0 no-repeat; }
+		li.file a[href $= '.css']	{ background: url(../images/document.png) 0 0 no-repeat; }
+		li.file a[href $= '.js']		{ background: url(../images/document.png) 0 0 no-repeat; }
+	li input
+	{
+		font-size: 16px;
+font-weight: bold;
+		position: absolute;
+		left: 0;
+		margin-left: 0;
+		opacity: 0;
+		z-index: 2;
+		cursor: pointer;
+		height: 1em;
+		width: 1em;
+		top: 0;
+	}
+		li input + ol
+		{
+			font-size: 16px;
+			background: url(../images/toggle-small-expand.png) 40px 0 no-repeat;
+			margin: -0.938em 0 0 -44px; /* 15px */
+			height: 1em;
+		}
+		li input + ol > li { display: none; margin-left: -14px !important; padding-left: 1px; }
+	li label
+	{
+		background: url(../images/folder-horizontal.png) 15px 1px no-repeat;
+		cursor: pointer;
+		display: block;
+		padding-left: 37px;
+		font-size: 16px;
+		font-weight: bold;
+	}
+
+	li input:checked + ol
+	{
+		background: url(../images/toggle-small.png) 40px 5px no-repeat;
+		margin: -1.25em 0 0 -44px; /* 20px */
+		padding: 1.563em 0 0 80px;
+		height: auto;
+	}
+		li input:checked + ol > li { display: block; margin: 0 0 0.125em;  /* 2px */}
+		li input:checked + ol > li:last-child { margin: 0 0 0.063em; /* 1px */ }

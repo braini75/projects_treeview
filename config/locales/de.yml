@@ -1,0 +1,4 @@
+# German strings go here for Rails i18n
+de:
+  projects_treeview_title: "Projektbaum"
+  
