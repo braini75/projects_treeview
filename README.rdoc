@@ -1,11 +1,25 @@
-= projects_treeview
+= Redmine Plugin: projects_treeview
+== Requirements 
+Redmine 3.x
 
-This is a tree view for Redmine projects, compatible with the recent Redmine
-versions (tested with 3.2.0).
+== Description:
+This Plugin offers a tree view for browsing projects. 
 
+== Installation
+1. go to `{REDMINE_ROOT}/plugin` directory.
+2. Install:
+  git clone https://github.com/braini75/projects_treeview.git
+3. Restart the redmine service. E.g. `service apache2 restart`
+4. enjoy!
+(There is no need for database migration, as this plugin does not change anything in the database.)
+
+== Usage
+1. Use the extra Menu Entry next to "Projects".
+
+
+== References
 Software adapted and modified from Paul Kertscher (http://sourceforge.net/p/projectstreeview/code/HEAD/tree/trunk/)
 version '0.0.3-78'
-
 
 Copyright (c) 2014 Paul Kertscher
 Permission is hereby granted, free of charge, to any person obtaining a copy of
