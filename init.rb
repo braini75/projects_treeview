@@ -2,7 +2,7 @@ Redmine::Plugin.register :projects_treeview do
   name 'Projects Treeview plugin'
   author 'Thomas Koch'
   description 'This Plugin offers a tree view for browsing projects.'
-  version '0.2'
+  version '0.3'
   url 'https://github.com/braini75/projects_treeview.git' 
   author_url 'https://github.com/braini75' 
   
