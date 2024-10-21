@@ -1,3 +1,4 @@
 # English strings go here for Rails i18n
 en:
   projects_treeview_title: "Projects treeview"
+  label_show_closed_projects: "View closed projects"
