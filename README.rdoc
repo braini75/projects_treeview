@@ -1,6 +1,6 @@
 = Redmine Plugin: projects_treeview
 == Requirements 
-Redmine 3.x
+Redmine 3.x, 4.x, 5.x
 
 == Description:
 This Plugin offers a tree view for browsing projects. 
