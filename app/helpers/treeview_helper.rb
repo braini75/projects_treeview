@@ -22,114 +22,48 @@
 #blog (see http://www.thecssninja.com/css/css-tree-menu)
 
 module TreeviewHelper
-#implements the treeview presented ar http://www.thecssninja.com/css/css-tree-menu
+  # A project together with its visible subprojects.
+  TreeNode = Struct.new(:project, :children)
 
+  # Renders +projects+ (the projects visible to the user, in any order) as nested,
+  # collapsible lists built on <details>/<summary>.
+  #
+  # All user-controlled text goes through link_to/content_tag, which escape it.
   def render_projects_tree(projects)
-    s = ''
-    if projects.any?
-      s << "<ol class='tree'>"
-      ancestors = Array.new
-      original_project = @project
-      last_project = nil
+    roots = projects_tree_nodes(projects)
+    return ''.html_safe if roots.empty?
 
-      projects.sort_by(&:lft).each do |project|
-	  
-        # @project = project
-        # if (ancestors.empty? || project.is_descendant_of?(ancestors.last))
-          # s << "<ul class='projects #{ ancestors.empty? ? 'root' : nil}'>\n"
-        # else
-          # ancestors.pop
-          # s << "</li>"
-          # while (ancestors.any? && !last_project.is_descendant_of?(ancestors.last))
-            # ancestors.pop
-            # s << "</ul></li>\n"
-          # end
-        # end
-        # classes = (ancestors.empty? ? 'root' : 'child')
-        
-		
-        # s << "</div>\n"
-        if !(last_project == nil)
-		  nols = 0
-		
-		  
-		
-		  if project.is_descendant_of?(last_project)
-			s << "<li>"
-			s << "<label for='subfolder"
-			s << last_project.identifier 
-			s << "'>"
-			s << "<a href='./projects/"
-			s << last_project.identifier
-			s << "'>"
-			s << last_project.name
-			s << "</a></label>"
-			s << "<input type='checkbox' id='" 
-			s << last_project.identifier
-			s << "' />"
-			s << "<ol>" # starte neue Unterliste
-		  else
-			s << "<li class='file'>"
-			s << "<a href='./projects/"
-			s << last_project.identifier
-			s << "'>"
-			s << last_project.name
-		    s << "</a></li>"
-		  end
-		  
-		  
-		  
-		  # s << "<li><div class='#{classes}'>"
-		
-		
-          # s << h(block_given? ? yield(last_project) : last_project.name)
-		  
-		  # s << "<a href='../projects/'"
-		  # s << last_project.identifier
-		  # s << "'>"
-		  # s << last_project.name
-		  # s << "</a>"
-		
-          ancestors.push(last_project)
-		  
-		  while ancestors.any? && !project.is_descendant_of?(ancestors.last)
-			ancestors.pop
-			nols = nols + 1
-		  end
-		  
-		  nols = nols-2
-		  
-		  while nols >= 0
-			s << "</ol>"
-			nols = nols - 1
-		  end
-        end
-		
-        last_project = project
-      end
-      
-      # while (ancestors.any? && !project.is_descendant_of?(ancestors.last))
-        # ancestors.pop
-        # s << "</ol></li>\n"
-      # end
-	  
-	  
-      
-      # print out last element
-	  s << "<li class='file'>"
-	  s << "<a href='./projects/"
-	  s << last_project.identifier
-	  s << "'>"
-	  s << last_project.name
-	  s << "</a></li>"
+    content_tag(:ul, render_projects_tree_nodes(roots), :class => 'projects-tree')
+  end
 
-      s << ("</ol>\n" * ancestors.size)
-      
-      s << "</ol>";
-
-      @project = original_project
+  # Builds the hierarchy from the nested set (lft/rgt). A project whose parent is
+  # not in the list (e.g. the parent is not visible to the user) becomes a root.
+  def projects_tree_nodes(projects)
+    roots = []
+    stack = []
+    projects.sort_by(&:lft).each do |project|
+      stack.pop while stack.any? && !project.is_descendant_of?(stack.last.project)
+      node = TreeNode.new(project, [])
+      (stack.empty? ? roots : stack.last.children) << node
+      stack << node
     end
-    s.html_safe
+    roots
+  end
 
+  def render_projects_tree_nodes(nodes)
+    safe_join(nodes.map { |node| render_projects_tree_node(node) })
+  end
+
+  def render_projects_tree_node(node)
+    project = node.project
+    link = link_to(project.name, project_path(project),
+                   :class => (project.closed? ? 'project-closed' : nil))
+    if node.children.empty?
+      content_tag(:li, link, :class => 'leaf')
+    else
+      summary = content_tag(:summary, link)
+      children = content_tag(:ul, render_projects_tree_nodes(node.children))
+      content_tag(:li, content_tag(:details, safe_join([summary, children])), :class => 'folder')
+    end
   end
 end

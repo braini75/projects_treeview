@@ -1,21 +1,83 @@
 = Redmine Plugin: projects_treeview
-== Requirements 
-Redmine 3.x, 4.x, 5.x
 
-== Description:
-This Plugin offers a tree view for browsing projects. 
+A collapsible tree view for browsing Redmine projects and their subprojects.
+
+== Origin
+This plugin is a fork of {projects_treeview}[https://github.com/braini75/projects_treeview]
+by Thomas Koch (braini75), which is itself an adaptation of the original
+"projectstreeview" plugin by <b>Paul Kertscher</b> (2014,
+{sourceforge}[http://sourceforge.net/p/projectstreeview/code/HEAD/tree/trunk/],
+version 0.0.3-78). All credit for the original idea and implementation goes to
+them. Their MIT copyright notices are kept (see License and References).
+
+== Features
+* A page that lists the projects visible to the current user, nested by project
+  hierarchy. Folders expand and collapse with a click or from the keyboard.
+* Menu entry in the top menu, next to "Projects".
+* Respects Redmine permissions: only projects the user can see are listed. A
+  subproject whose parent is not visible to the user is shown at the top level.
+* Sidebar option "View closed projects"; closed projects are dimmed.
+* Follows the active Redmine theme: no images and no hardcoded colors.
+* Translations: English, English (GB), German and Spanish. Other languages fall
+  back to English.
+
+== Requirements
+* Redmine 5.0 or higher. Maintained for Redmine 7.x.
+* No database migration and no extra gems.
 
 == Installation
-1. go to `{REDMINE_ROOT}/plugin` directory.
-2. Install:
-  git clone https://github.com/braini75/projects_treeview.git
-3. Restart the redmine service. E.g. `service apache2 restart`
-4. enjoy!
-(There is no need for database migration, as this plugin does not change anything in the database.)
+1. Go to the plugins directory of your Redmine and clone the repository:
+    cd {REDMINE_ROOT}/plugins
+    git clone https://github.com/sostenido/projects_treeview.git
+2. Restart Redmine (the plugin's assets are picked up on restart). With Docker,
+   the plugin folder must be in the mounted plugins volume (or copied into the
+   image); then restart the container.
+3. Done. There is nothing to migrate: the plugin does not touch the database.
 
 == Usage
-1. Use the extra Menu Entry next to "Projects".
+1. Click "Projects treeview" in the top menu, next to "Projects".
+2. Click a folder (anywhere on its row except the name) to expand or collapse it;
+   click a project name to open the project.
+3. To include closed projects, tick "View closed projects" in the sidebar and
+   press "Apply".
 
+== Upgrading from 0.4.x
+Nothing to migrate. The markup changed from <tt>ol.tree</tt> to
+<tt>ul.projects-tree</tt> and the bundled icons are gone; if you styled the old
+tree from a theme, update your selectors.
+
+== Tests
+From the Redmine root:
+  bundle exec rake redmine:plugins:test NAME=projects_treeview RAILS_ENV=test
+
+== License
+MIT. See the LICENSE file. The copyright and permission notices of the original
+authors (Paul Kertscher, Ryan Seddon) must be kept in all copies or substantial
+portions of the software.
+
+== Credits
+* Paul Kertscher: original "projectstreeview" plugin.
+* Thomas Koch (braini75): adaptation for newer Redmine versions.
+* Ryan Seddon: CSS tree menu used up to version 0.4 (no longer used).
+* Sostenido: maintenance of this fork.
+
+== Changelog
+=== 0.5.0
+* Security: project names are now HTML-escaped. The tree previously inserted them
+  unescaped, so a malicious project name could run script in other users' browsers.
+* Valid HTML: nested lists built on <details>/<summary>; the checkbox/CSS hack
+  is gone, so the tree is also keyboard accessible.
+* Links use <tt>project_path</tt> instead of hand-built URLs.
+* Closed projects are dimmed when "View closed projects" is checked.
+* No images and no hardcoded colors: the tree follows the active Redmine theme.
+* Added Spanish translation, an empty-state message and a page title.
+* Simplified the controller (removed unused helper includes).
+* Real functional tests (they replace the placeholder test).
+* Declares <tt>requires_redmine</tt> (5.0 or higher).
+* Added the LICENSE file.
+
+=== 0.4
+* Support for Redmine 5.x.
 
 == References
 Software adapted and modified from Paul Kertscher (http://sourceforge.net/p/projectstreeview/code/HEAD/tree/trunk/)
@@ -23,23 +85,23 @@ version '0.0.3-78'
 
 Copyright (c) 2014 Paul Kertscher
 Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in 
-the Software without restriction, including without limitation the rights to 
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-of the Software, and to permit persons to whom the Software is furnished to do 
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
 so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all 
+The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-The original css tree menu is based on a work of Ryan Seddon, presented in his 
+The original css tree menu is based on a work of Ryan Seddon, presented in his
 blog (see http://www.thecssninja.com/css/css-tree-menu)

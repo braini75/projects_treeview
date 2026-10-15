@@ -22,37 +22,16 @@
 #blog (see http://www.thecssninja.com/css/css-tree-menu)
 
 class TreeviewController < ApplicationController
-#  unloadable
+  helper :projects # render_project_action_links
 
-  helper :sort
-  include SortHelper
-  helper :custom_fields
-  include CustomFieldsHelper
-  helper :issues
-  helper :queries
-  include QueriesHelper
-  helper :repositories
-  include RepositoriesHelper
-  include TreeviewHelper
-  helper :members
-  helper :projects
-
-  # Lists visible projects
+  # Lists the visible projects as a collapsible tree
   def index
     respond_to do |format|
-      format.html {
-        scope = Project
-        unless params[:closed]
-          scope = scope.active
-        end
-        @projects = scope.visible.order('lft').all
-      }
-
+      format.html do
+        scope = Project.visible
+        scope = scope.active unless params[:closed]
+        @projects = scope.order(:lft).to_a
+      end
     end
   end
-
-
-#  def index
-#  end
-
 end

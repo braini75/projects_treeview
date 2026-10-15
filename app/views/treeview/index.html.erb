@@ -24,17 +24,24 @@ blog (see http://www.thecssninja.com/css/css-tree-menu)
 
 %>
 
+<% html_title l(:label_project_plural) %>
+
 <% content_for :header_tags do %>
-    <%= stylesheet_link_tag 'treeview', :plugin => 'projects_treeview' %>
+  <%= stylesheet_link_tag 'treeview', :plugin => 'projects_treeview' %>
 <% end %>
+
 <div class="contextual">
-    <%= render_project_action_links %>
+  <%= render_project_action_links %>
 </div>
 
 <h2><%= l(:label_project_plural) %></h2>
 
 <div id="projects-index-tree">
-	<%= render_projects_tree(@projects) %>
+  <% if @projects.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= render_projects_tree(@projects) %>
+  <% end %>
 </div>
 
 <% content_for :sidebar do %>
@@ -44,4 +51,3 @@ blog (see http://www.thecssninja.com/css/css-tree-menu)
     <p><%= submit_tag l(:button_apply), :class => 'button-small', :name => nil %></p>
   <% end %>
 <% end %>
-
